@@ -1,22 +1,22 @@
-# angular-storage
+# angular-cloud-storage
 
-An angular module wrapping storages API
+An angular module wrapping cloud storages API
 
-### Storage services supported
+### Cloud storage services supported
 Dropbox: Yes  
-Google Drive: Not yet  
+Google Drive: Not yet
 ...
 
 ## Installation
 In your document include this scripts:  
-- angular-storage.js  
+- angular-cloud-storage.js  
 - [angular-local-storage](https://github.com/grevory/angular-local-storage) to enable caching support (Optional)  
 - Regarding the services you are using:  
  * For dropbox: [dropbox/dropbox-js](https://github.com/dropbox/dropbox-js) and services/dropbox.js  
  
- In your AngularJS app, you'll need to import the angular-storage module:  
+ In your AngularJS app, you'll need to import the angular-cloud-storage module:  
  ```
- angular.module('myApp', ['angular-storage']);
+ angular.module('myApp', ['angular-cloud-storage']);
  ```
 
 ## Documentation
