@@ -1,0 +1,103 @@
+<html ng-app="example">
+
+<head>
+	<title>Demo</title>
+
+	<meta charset='utf-8'>
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body ng-controller="main">
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#"><span class="glyphicon glyphicon-cloud"></span>Awesome storage</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#" ng-bind="profile.email"></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fuild">
+
+		<div class="row">
+
+			<div class="col-sm-3 col-md-2 sidebar">
+				<ul class="nav nav-sidebar">
+					<li class="active"><a href="#">Dropbox</a></li>
+					<li><a href="#">Google drive</a></li>
+					<li><a href="#">Box</a></li>
+				</ul>
+			</div>
+
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<h1 class="page-header" ng-bind="directory"></h1>
+				<div class="input-group">
+					<input type="text" class="form-control" ng-model="cdir">
+					<span class="input-group-btn">
+						<button class="btn btn-primary" type="button" ng-click="mkdir(cdir)">Create directory</button>
+					</span>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="file in files">
+								<td ng-click="open(file)">
+									<span class="glyphicon glyphicon-file" ng-if="!file.is_dir"></span>
+									<span class="glyphicon glyphicon-folder-close" ng-if="file.is_dir"></span>
+									<span ng-bind="file.name"></span>
+								</td>
+								<td>
+									<button type="button" class="close" ng-click="remove(file)">&times;</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- Modal -->
+	<div class="modal" ng-show="file">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" ng-bind="file.name"></h4>
+				</div>
+				<div class="modal-body">
+					<textarea ng-model="file.content"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" ng-click="file=null">Close</button>
+					<button type="button" class="btn btn-primary" ng-click="save(file);file=null">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="/bower_components/angular/angular.js"></script>
+	<!--<script src="/bower_components/angular-local-storage/angular-local-storage.min.js"></script>-->
+	<script src="/angular-cloud-storage.js"></script>
+	<script src="/bower_components/dropbox-build/dropbox.js"></script>
+	<script src="/services/dropbox.js"></script>
+	<script src="/example/main.js"></script>
+
+</body>
+
+</html>

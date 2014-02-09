@@ -42,6 +42,9 @@ Every method below has an optional successCallback and errorCallback after the r
 $storage.authenticate();  
 -> Returns a profile object
 
+##### Checks if this client can perform API calls on behalf of a user
+$storage.isAuthenticated()
+
 ##### To log out
 $storage.signOut();
 
@@ -69,5 +72,7 @@ $storage.move(fromPath, toPath);
 $storage.copy(fromPath, toPath);
 
 ## Example
+ ```grunt connect ``` to start a webserver and open http://localhost:8080/example in your browser
 
-Please check the /example folder
+## Tests
+ ```grunt connect ``` to start a webserver and open http://localhost:8080/test/test-runner.html

@@ -1,0 +1,32 @@
+{
+  "name": "angular-cloud-storage",
+  "main": "angular-cloud-storage.js",
+  "version": "0.1.0",
+  "authors": [
+    "Maxime Mezrahi <maxime.mezrahi@gmail.com>"
+  ],
+  "description": "An angular module wrapping cloud storages API",
+  "keywords": [
+    "store",
+    "cloud",
+    "storage",
+    "local",
+    "dropbox"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "devDependencies": {
+    "angular": "~1.2.11",
+    "angular-mocks": "~1.2.11",
+    "jasmine": "~2.0.0"
+  },
+  "dependencies": {
+    "dropbox-build": "*",
+    "angular-local-storage": "*"
+  }
+}
