@@ -14,7 +14,8 @@
 		var cache = null;
 		var storage = {};
 		var config = {
-			cache: false
+			cache: false,
+			expireTime: 120, // In seconds
 		};
 
 		/**
@@ -59,7 +60,8 @@
 	   * @method configure
 	   * @description enable/disable caching using local storage
 	   */
-		storage.cache = function(boolean) {
+		storage.cache = function(boolean, expireTime) {
+			if (expireTime) config.expireTime = expireTime;
 			if (boolean === false)
 				return config.cache = false;
 			if (localstorage) {
@@ -128,16 +130,24 @@
 	   * @method read
 	   * @description read a file
 	   */
-		storage.readFile = function(path) {
+		storage.readFile = function(path, force_sync) {
 			var cached = null;
 
-			if (config.cache) {
+			if (config.cache && !force_sync) {
 				cached = cache.get(path);
+				if (cached) {
+					/* Checking expiration */
+					var currentDate = new Date().getTime();
+					var secondsBetween = Math.abs((currentDate - cached.lastSynced) / 1000);
+					if (secondsBetween > config.expireTime)
+						cached = null;
+				}
 			}
 
 			var pr = promise(service.readFile, [path], cached);
 			pr.then(function(file) {
 				if (config.cache) {
+					file.lastSynced = new Date().getTime();
 					var success = cache.add(file.path, file);
 					if (!success) cache.remove(file.path);
 				}
@@ -155,6 +165,7 @@
 			pr.then(function(file) {
 				if (config.cache) {
 					file.content = data;
+					file.lastSynced = new Date().getTime();
 					cache.add(file.path, file);
 				}
 			});
