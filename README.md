@@ -24,52 +24,51 @@ In your document include this scripts:
 ### Configuration
 
 ##### To use a service and set the configuration
-$storage.use(serviceName, config)  
+```$storage.use(serviceName, config)```
 -> Returns a boolean for success
 
 ##### To enable/disable caching using local storage
-$storage.cache(boolean)  
+expireTime: time in seconds before the file cache will expire (120 by default)
+```$storage.cache(boolean, expireTime)```
 -> Returns a boolean for success
 
 ##### To clear the cache
-$storage.clearCache();  
+```$storage.clearCache()```
 -> Returns a boolean for success
 
 ### Controls
-Every method below has an optional successCallback and errorCallback after the required parameters.
+Every method below returns a promise
 
 ##### To log in
-$storage.authenticate();  
--> Returns a profile object
+```$storage.authenticate()```
 
 ##### Checks if this client can perform API calls on behalf of a user
-$storage.isAuthenticated()
+```$storage.isAuthenticated()```
 
 ##### To log out
-$storage.signOut();
+```$storage.signOut()```
 
 ##### To read a file
-$storage.readFile(path);  
--> Returns a file object
+force_sync: force to read the file (if you are using the cache)
+```$storage.readFile(path, force_sync)```
 
 ##### To write a file
-$storage.writeFile(path, data);
+```$storage.writeFile(path, data)```
 
 ##### To read a directory
-$storage.readdir(path)  
--> Returns an array of files
+```$storage.readdir(path)```
 
 ##### To remove a file or a directory
-$storage.remove(path)
+```$storage.remove(path)```
 
 ##### To create a directory
-$storage.mkdir(path);
+```$storage.mkdir(path)```
 
 ##### To Move a file or folder to a different location  
-$storage.move(fromPath, toPath);
+```$storage.move(fromPath, toPath)```
 
 ##### To Copy a file or folder 
-$storage.copy(fromPath, toPath);
+```$storage.copy(fromPath, toPath)```
 
 ## Example
  ```grunt connect ``` to start a webserver and open http://localhost:8080/example in your browser
