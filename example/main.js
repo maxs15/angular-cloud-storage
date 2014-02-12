@@ -21,8 +21,11 @@ angular.module('example', ['angular-storage'])
 	$scope.open = function(file) {
 		if (file.is_dir)
 			$location.search({dir: file.path});
-		else if (file.mime_type === 'text/plain')
-			$scope.file = $storage.readFile(file.path);
+		else if (file.mime_type === 'text/plain') {
+			$storage.readFile(file.path).then(function(file) {
+				$scope.file = file;
+			});
+		}
 	};
 
 	$scope.mkdir = function(name) {
@@ -37,18 +40,21 @@ angular.module('example', ['angular-storage'])
 	};
 
 	$scope.login = function() {
-		$scope.profile = $storage.authenticate(function() {
+		$storage.authenticate().then(function(profile) {
+			$scope.profile = profile;
 			$scope.refresh();
 		});
 	};
 
 	$scope.refresh = function() {
-		$scope.files = $storage.readdir($scope.directory);
+		$storage.readdir($scope.directory).then(function(files) {
+			$scope.files = files;
+		});
 	};
 
 	$scope.$watch('directory', function(dirpath) {
 		if (!dirpath) return;
-		$storage.isAuthenticated(function(user) {
+		$storage.isAuthenticated().then(function(user) {
 			if (user.authenticated)
 				$scope.refresh();
 			else

@@ -20,22 +20,16 @@
 		/**
 		* Convert a callback to a promise
 		*/
-		var promise = function(fn, params, successCallback, errorCallback, array, cached) {
+		var promise = function(fn, params, cached) {
 			var deferred = $q.defer();
-			var obj = array ? [] : {};
-			obj.$resolved = false;
-			obj.$promise = deferred.promise;
-			obj.$promise.then(successCallback, errorCallback);
 			if (!params) params = [];
 
 			var cb = function(err, data) {
-				angular.extend(obj, data);
-				obj.$resolved = true;
 				if (err)
 					deferred.reject(err);
 				else
 					deferred.resolve(data);
-				if(window.test) $rootScope.$apply();
+				if(window.test) $rootScope.$apply(); // For tests purpose
 			};
 
 			if (cached) {
@@ -44,7 +38,7 @@
 				params.push(cb);
 				fn.apply(null, params);
 			}
-			return obj;
+			return deferred.promise;
 		};
 
 		/**
@@ -102,103 +96,101 @@
 	   * @method auth
 	   * @description log in
 	   */
-		storage.authenticate = function(successCallback, errorCallback) {
-			return promise(service.authenticate, [], successCallback, errorCallback);
+		storage.authenticate = function() {
+			return promise(service.authenticate, []);
 		};
 
 		/**
 	   * @method isAuthenticated
 	   * @description Checks if this client can perform API calls on behalf of a user
 	   */
-		storage.isAuthenticated = function(successCallback, errorCallback) {
-			return promise(service.isAuthenticated, [], successCallback, errorCallback);
+		storage.isAuthenticated = function() {
+			return promise(service.isAuthenticated, []);
 		};
 
 		/**
 	   * @method signOut
 	   * @description log out
 	   */
-		storage.signOut = function(successCallback, errorCallback) {
-			return promise(service.signOut, [], successCallback, errorCallback);
+		storage.signOut = function() {
+			return promise(service.signOut, []);
 		};
 
 		/**
 	   * @method readdir
 	   * @description read a directory
 	   */
-		storage.readdir = function(path, successCallback, errorCallback) {
-			return promise(service.readdir, [path], successCallback, errorCallback, true);
+		storage.readdir = function(path) {
+			return promise(service.readdir, [path]);
 		};
 
 		/**
 	   * @method read
 	   * @description read a file
 	   */
-		storage.readFile = function(path, successCallback, errorCallback) {
+		storage.readFile = function(path) {
 			var cached = null;
 
 			if (config.cache) {
 				cached = cache.get(path);
 			}
 
-			var caching = function(file) {
+			var pr = promise(service.readFile, [path], cached);
+			pr.then(function(file) {
 				if (config.cache) {
 					var success = cache.add(file.path, file);
 					if (!success) cache.remove(file.path);
 				}
-				if(successCallback) successCallback(file);
-			};
-
-			return promise(service.readFile, [path], caching, errorCallback, false, cached);
+			});
+			return pr;
 		};
 
 		/**
 	   * @method write
 	   * @description write a file
 	   */
-		storage.writeFile = function(path, data, successCallback, errorCallback) {
+		storage.writeFile = function(path, data) {
 
-			var caching = function(file) {
+			var pr = promise(service.writeFile, [path, data]);
+			pr.then(function(file) {
 				if (config.cache) {
 					file.content = data;
 					cache.add(file.path, file);
 				}
-				if(successCallback) successCallback(file);
-			};
-
-			return promise(service.writeFile, [path, data], caching, errorCallback);
+			});
+			return pr;
 		};
 
 		/**
 	   * @method mkdir
 	   * @description To create a directory
 	   */
-		storage.mkdir = function(path, successCallback, errorCallback) {
-			return promise(service.mkdir, [path], successCallback, errorCallback);
+		storage.mkdir = function(path) {
+			return promise(service.mkdir, [path]);
 		};
 
 		/**
 	   * @method remove
 	   * @description To remove a file or a directory
 	   */
-		storage.remove = function(path, successCallback, errorCallback) {
-			return promise(service.remove, [path], successCallback, errorCallback);
+		storage.remove = function(path) {
+			return promise(service.remove, [path]);
 		};
 
 		/**
 	   * @method copy
 	   * @description To Copy a file or folder 
 	   */
-		storage.copy = function(fromPath, toPath, successCallback, errorCallback) {
-			return promise(service.remove, [fromPath, toPath], successCallback, errorCallback);
+		storage.copy = function(fromPath, toPath) {
+			return promise(service.remove, [fromPath, toPath]);
 		};
 
 		/**
 	   * @method move
 	   * @description To Move a file or folder to a different location  
 	   */
-		storage.move = function(fromPath, toPath, successCallback, errorCallback) {
-			return promise(service.move, [fromPath, toPath], successCallback, errorCallback);
+		storage.move = function(fromPath, toPath) {
+			return promise(service.move, [fromPath, toPath]);
 		};
 
 		return storage;
